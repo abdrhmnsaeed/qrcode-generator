@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Generator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #f4f4f4;
+        margin: 0;
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      #urlInput {
+        width: 80%;
+        max-width: 400px;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        text-align: center;
+      }
+      #generate,
+      #download {
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #4caf50;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      #generate:hover,
+      #download:hover {
+        background-color: #45a049;
+      }
+      #qrcode {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      #qrcode img {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>QR Code Generator</h1>
+    <input type="text" id="urlInput" placeholder="Enter URL" />
+    <button id="generate">Generate QR Code</button>
+    <div id="qrcode"></div>
+    <button id="download" style="display: none">Download QR Code</button>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+      document
+        .getElementById("generate")
+        .addEventListener("click", function () {
+          const url = document.getElementById("urlInput").value;
+          if (url) {
+            // Clear any previous QR code
+            document.getElementById("qrcode").innerHTML = "";
+            document.getElementById("download").style.display = "none";
+
+            // Generate the QR code
+            QRCode.toDataURL(url, function (err, dataUrl) {
+              if (err) throw err;
+
+              // Create an image element
+              const img = document.createElement("img");
+              img.src = dataUrl;
+              document.getElementById("qrcode").appendChild(img);
+
+              // Show the download button
+              const downloadButton = document.getElementById("download");
+              downloadButton.style.display = "block";
+              downloadButton.addEventListener("click", function () {
+                const a = document.createElement("a");
+                a.href = dataUrl;
+                a.download = "qrcode.png";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+              });
+            });
+          } else {
+            alert("Please enter a URL");
+          }
+        });
+    </script>
+  </body>
+</html>
